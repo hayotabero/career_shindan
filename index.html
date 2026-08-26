@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>保育士キャリアアップ診断 | 保育士Reach</title>
+<style>
+  :root{
+    --cream:#FFF8EF;
+    --ink:#4A3B30;
+    --coral:#FF7A59;
+    --coral-deep:#E85F3E;
+    --mint:#7FC9AE;
+    --mint-pale:#E4F4EE;
+    --line:#EDE1D3;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:"Hiragino Sans","Yu Gothic",sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:480px; margin:0 auto; padding:28px 20px 60px; }
+  header{ text-align:center; margin-bottom:24px; }
+  .eyebrow{ font-size:13px; letter-spacing:.08em; color:var(--mint); font-weight:700; margin-bottom:6px; }
+  h1{ font-size:24px; margin:0 0 8px; line-height:1.5; }
+  header p{ font-size:13.5px; color:#8C7B6E; margin:0; line-height:1.7; }
+
+  .progress{ display:flex; gap:6px; margin-bottom:22px; }
+  .progress div{ flex:1; height:6px; border-radius:3px; background:var(--line); }
+  .progress div.done{ background:var(--coral); }
+
+  .card{
+    background:#FFFFFF; border:1px solid var(--line); border-radius:20px;
+    padding:24px 20px; margin-bottom:16px; box-shadow:0 6px 20px rgba(74,59,48,0.05);
+  }
+  .q-title{ font-size:17px; font-weight:800; margin:0 0 16px; line-height:1.6; }
+  .opt{
+    display:block; width:100%; text-align:left; padding:14px 16px; margin-bottom:10px;
+    border:1.5px solid var(--line); border-radius:14px; background:var(--cream);
+    font-size:15px; color:var(--ink); cursor:pointer; transition:all .15s ease;
+  }
+  .opt:active{ transform:scale(0.98); }
+  .opt.selected{ background:var(--coral); border-color:var(--coral); color:#fff; font-weight:700; }
+
+  .nav-row{ display:flex; gap:10px; margin-top:6px; }
+  .nav-row button{
+    flex:1; padding:14px; border-radius:14px; border:none; font-size:15px; font-weight:800; cursor:pointer;
+  }
+  .btn-next{ background:var(--coral); color:#fff; }
+  .btn-next:disabled{ background:#E8D9CC; color:#B8A99A; }
+  .btn-back{ background:#FFFFFF; color:#8C7B6E; border:1.5px solid var(--line) !important; }
+
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+
+  .result-badge{
+    display:inline-block; background:var(--mint-pale); color:#2F7A5F; font-size:12px; font-weight:700;
+    padding:4px 12px; border-radius:100px; margin-bottom:10px;
+  }
+  .result-title{ font-size:15px; color:#8C7B6E; margin:0 0 6px; }
+  .result-field{ font-size:30px; font-weight:900; color:var(--coral-deep); margin:0 0 14px; line-height:1.3; }
+  .result-desc{ font-size:14.5px; line-height:1.9; color:var(--ink); margin-bottom:6px; }
+
+  .path-box{
+    background:var(--mint-pale); border-radius:16px; padding:18px; margin-top:16px;
+  }
+  .path-box h3{ font-size:14px; margin:0 0 10px; color:#2F7A5F; }
+  .path-step{
+    display:flex; align-items:center; gap:10px; font-size:13.5px; padding:8px 0; color:var(--ink);
+  }
+  .path-step .dot{ width:10px; height:10px; border-radius:50%; background:#C7E5D9; flex-shrink:0; }
+  .path-step.current .dot{ background:var(--coral); }
+  .path-step .amount{ margin-left:auto; font-weight:800; color:var(--coral-deep); }
+
+  .sub-list{ margin-top:14px; }
+  .sub-item{
+    font-size:13.5px; padding:10px 12px; background:var(--cream); border-radius:10px; margin-bottom:8px; color:var(--ink);
+  }
+
+  .cta{
+    display:block; text-align:center; background:var(--coral); color:#FFFFFF; font-weight:900; font-size:16px;
+    padding:16px; border-radius:16px; text-decoration:none; margin-top:20px;
+  }
+  .cta small{ display:block; font-weight:400; font-size:12px; margin-top:4px; opacity:.9; }
+
+  .note{ font-size:11.5px; color:#A9998A; line-height:1.8; margin-top:16px; }
+  .restart{ text-align:center; margin-top:14px; }
+  .restart a{ font-size:13px; color:#8C7B6E; text-decoration:underline; cursor:pointer; }
+  footer{ text-align:center; font-size:11px; color:#B8A99A; margin-top:30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">保育士Reach 無料診断</div>
+    <h1>保育士キャリアアップ診断</h1>
+    <p>あなたに向いているキャリアアップ分野と、<br>目指せる役職・処遇改善の目安がわかります</p>
+  </header>
+
+  <div class="progress" id="progressBar"></div>
+
+  <!-- Q0: 経験年数 -->
+  <div class="screen active" id="screen-q0">
+    <div class="card">
+      <p class="q-title">Q1. 保育士としての経験年数は?</p>
+      <button class="opt" data-q="exp" data-v="0">3年未満</button>
+      <button class="opt" data-q="exp" data-v="1">3年以上7年未満</button>
+      <button class="opt" data-q="exp" data-v="2">7年以上</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-next" id="next0" disabled>次へ</button>
+    </div>
+  </div>
+
+  <!-- Q1〜Q6: 興味・得意分野（各分野に対応） -->
+  <div class="screen" id="screen-q1">
+    <div class="card">
+      <p class="q-title">Q2. 気になる/得意なのはどっち?</p>
+      <button class="opt" data-q="q1" data-v="乳児保育">0〜2歳児との関わり方をもっと深めたい</button>
+      <button class="opt" data-q="q1" data-v="幼児教育">5歳児・就学前の教育的な関わりに関心がある</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" id="back1">戻る</button>
+      <button class="btn-next" id="next1" disabled>次へ</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-q2">
+    <div class="card">
+      <p class="q-title">Q3. どちらかというと?</p>
+      <button class="opt" data-q="q2" data-v="障害児保育">特別な配慮が必要な子との関わりにやりがいを感じる</button>
+      <button class="opt" data-q="q2" data-v="食育・アレルギー対応">食事・アレルギー対応など、食に関する知識を深めたい</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" id="back2">戻る</button>
+      <button class="btn-next" id="next2" disabled>次へ</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-q3">
+    <div class="card">
+      <p class="q-title">Q4. どちらかというと?</p>
+      <button class="opt" data-q="q3" data-v="保健衛生・安全対策">衛生管理や安全対策、ケガ・事故予防に関心がある</button>
+      <button class="opt" data-q="q3" data-v="保護者支援・子育て支援">保護者との関係づくり・相談対応が得意</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" id="back3">戻る</button>
+      <button class="btn-next" id="next3" disabled>次へ</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-q4">
+    <div class="card">
+      <p class="q-title">Q5. どちらかというと?</p>
+      <button class="opt" data-q="q4" data-v="保育実践">製作・行事・環境構成など、保育の引き出しを増やしたい</button>
+      <button class="opt" data-q="q4" data-v="マネジメント">後輩指導やチームをまとめる役割に興味がある</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" id="back4">戻る</button>
+      <button class="btn-next" id="next4" disabled>次へ</button>
+    </div>
+  </div>
+
+  <div class="screen" id="screen-q5">
+    <div class="card">
+      <p class="q-title">Q6. 今後、目指したい方向性は?</p>
+      <button class="opt" data-q="goal" data-v="specialist">特定分野を極めた専門家になりたい</button>
+      <button class="opt" data-q="goal" data-v="manager">園全体を見るリーダー・管理職を目指したい</button>
+      <button class="opt" data-q="goal" data-v="undecided">まだ決めていない・両方興味がある</button>
+    </div>
+    <div class="nav-row">
+      <button class="btn-back" id="back5">戻る</button>
+      <button class="btn-next" id="next5" disabled>結果を見る</button>
+    </div>
+  </div>
+
+  <!-- 結果画面 -->
+  <div class="screen" id="screen-result">
+    <div class="card">
+      <div class="result-badge" id="resultExpBadge"></div>
+      <p class="result-title">あなたに向いているキャリアアップ分野は</p>
+      <p class="result-field" id="resultField">-</p>
+      <p class="result-desc" id="resultDesc"></p>
+
+      <div class="sub-list" id="subFieldList"></div>
+    </div>
+
+    <div class="card">
+      <div class="path-box">
+        <h3>あなたが今後目指せる役職の目安</h3>
+        <div id="pathSteps"></div>
+      </div>
+      <p class="note" id="pathNote"></p>
+    </div>
+
+    <a class="cta" href="https://hoiku.proreach.co.jp/booking-calendar-kjm/" target="_blank" rel="noopener">
+      キャリアアップに強い園を探す
+      <small>研修制度が整った園、非公開求人はこちらから</small>
+    </a>
+
+    <div class="restart"><a id="restartLink">もう一度診断する</a></div>
+
+    <div class="note">
+      ※ 厚生労働省「保育士等キャリアアップ研修ガイドライン」(8分野)に基づく一般的な目安です。処遇改善の金額や対象人数枠は施設によって異なり、必ず加算されることを保証するものではありません。詳しくは勤務先の制度をご確認ください。
+    </div>
+  </div>
+
+  <footer>保育士Reach — 保育士さんのキャリアに、寄り添います</footer>
+</div>
+
+<script>
+const FIELD_INFO = {
+  '乳児保育': {
+    desc: '0〜2歳児の発達や関わり方を専門的に学ぶ分野です。愛着形成や生活習慣の自立支援など、乳児期特有の保育の質を高めたい方に向いています。',
+  },
+  '幼児教育': {
+    desc: '3〜5歳児、特に就学前教育を意識した関わり方を学ぶ分野です。小学校との接続(アプローチカリキュラム)にも関心がある方に向いています。',
+  },
+  '障害児保育': {
+    desc: '特別な配慮が必要な子どもへの理解と支援方法を学ぶ分野です。個別の発達支援計画や関係機関との連携にも関わっていきたい方に向いています。',
+  },
+  '食育・アレルギー対応': {
+    desc: '食を通じた発達支援や、食物アレルギーへの安全な対応を学ぶ分野です。給食・食育計画に関わりたい方、栄養面から子どもを支えたい方に向いています。',
+  },
+  '保健衛生・安全対策': {
+    desc: '感染症対策、事故防止、衛生管理などを専門的に学ぶ分野です。園全体の安全管理を担う役割を目指したい方に向いています。',
+  },
+  '保護者支援・子育て支援': {
+    desc: '保護者との信頼関係の築き方や、子育て相談への対応力を学ぶ分野です。保護者対応にやりがいを感じる方、地域の子育て支援にも関心がある方に向いています。',
+  },
+  '保育実践': {
+    desc: '製作・音楽・運動・環境構成など、日々の保育の引き出しを増やす分野です。保育そのものの専門性を高めたい方に向いています。',
+  },
+  'マネジメント': {
+    desc: '人材育成、労務管理、園運営など、チームや組織を動かす力を学ぶ分野です。副主任・主任・将来的な園長候補を目指す方には必須の分野です。',
+  },
+};
+
+const state = { exp:null, q1:null, q2:null, q3:null, q4:null, q5:null, goal:null };
+const screens = ['q0','q1','q2','q3','q4','q5','result'];
+let currentScreen = 0;
+
+function showScreen(idx){
+  screens.forEach((s,i)=>{
+    document.getElementById('screen-'+s).classList.toggle('active', i===idx);
+  });
+  currentScreen = idx;
+  renderProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderProgress(){
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = '';
+  const total = screens.length - 1; // resultは含めない
+  for(let i=0;i<total;i++){
+    const d = document.createElement('div');
+    if(i < currentScreen) d.classList.add('done');
+    bar.appendChild(d);
+  }
+}
+renderProgress();
+
+// 選択肢クリック処理（共通化）
+document.querySelectorAll('.opt').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const q = btn.dataset.q;
+    const v = btn.dataset.v;
+    state[q] = v;
+    // 同じ質問内の選択状態をリセットして選択中のものだけ強調
+    document.querySelectorAll(`.opt[data-q="${q}"]`).forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    // 対応する次へボタンを有効化
+    const nextBtnMap = { exp:'next0', q1:'next1', q2:'next2', q3:'next3', q4:'next4', goal:'next5' };
+    document.getElementById(nextBtnMap[q]).disabled = false;
+  });
+});
+
+document.getElementById('next0').addEventListener('click', ()=> showScreen(1));
+document.getElementById('back1').addEventListener('click', ()=> showScreen(0));
+document.getElementById('next1').addEventListener('click', ()=> showScreen(2));
+document.getElementById('back2').addEventListener('click', ()=> showScreen(1));
+document.getElementById('next2').addEventListener('click', ()=> showScreen(3));
+document.getElementById('back3').addEventListener('click', ()=> showScreen(2));
+document.getElementById('next3').addEventListener('click', ()=> showScreen(4));
+document.getElementById('back4').addEventListener('click', ()=> showScreen(3));
+document.getElementById('next4').addEventListener('click', ()=> showScreen(5));
+document.getElementById('back5').addEventListener('click', ()=> showScreen(4));
+document.getElementById('next5').addEventListener('click', ()=>{
+  computeResult();
+  showScreen(6);
+});
+
+document.getElementById('restartLink').addEventListener('click', ()=>{
+  Object.keys(state).forEach(k=> state[k]=null);
+  document.querySelectorAll('.opt').forEach(b=>b.classList.remove('selected'));
+  ['next0','next1','next2','next3','next4','next5'].forEach(id=>{
+    document.getElementById(id).disabled = true;
+  });
+  showScreen(0);
+});
+
+function computeResult(){
+  // マネジメント志向が明確なら、goalを優先してマネジメントを最上位候補に押し上げる
+  const candidates = [state.q1, state.q2, state.q3, state.q4];
+  let topField = candidates[0];
+
+  if(state.goal === 'manager'){
+    topField = 'マネジメント';
+  } else if(state.goal === 'specialist'){
+    // マネジメント以外の中から、一番最初に選ばれたものを専門分野候補に
+    topField = candidates.find(f=>f!=='マネジメント') || candidates[0];
+  } else {
+    topField = candidates[0];
+  }
+
+  const others = candidates.filter(f=>f!==topField);
+
+  document.getElementById('resultField').textContent = topField;
+  document.getElementById('resultDesc').textContent = FIELD_INFO[topField].desc;
+
+  const subList = document.getElementById('subFieldList');
+  subList.innerHTML = '<div style="font-size:12px;color:#8C7B6E;margin-bottom:8px;">こちらの分野にも関心がありそうです</div>';
+  others.forEach(f=>{
+    const div = document.createElement('div');
+    div.className = 'sub-item';
+    div.textContent = '・' + f;
+    subList.appendChild(div);
+  });
+
+  // 経験年数バッジ
+  const expLabels = ['経験3年未満', '経験3〜7年未満', '経験7年以上'];
+  document.getElementById('resultExpBadge').textContent = expLabels[Number(state.exp)];
+
+  const pathLabel = renderPath(Number(state.exp), topField);
+
+  const goalLabels = { specialist:'専門家志向', manager:'マネジメント志向', undecided:'未定・両方に関心あり' };
+
+  logResultToSheet({
+    expLabel: expLabels[Number(state.exp)],
+    topField: topField,
+    goalLabel: goalLabels[state.goal],
+    pathLabel: pathLabel,
+  });
+}
+
+/* ---------- Googleスプレッドシートへの結果送信 ---------- */
+const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbyIr_u2Q2HgedE6lk-DxwA1EY_2HdW7BlLv1yR0mUKXJXR1VC84CZf7xkWhphkQe0tWjA/exec';
+
+function logResultToSheet(d){
+  if(!SHEET_WEBAPP_URL) return; // 未設定の場合は何もしない
+
+  const payload = {
+    日時: new Date().toLocaleString('ja-JP'),
+    経験年数: d.expLabel,
+    おすすめ分野: d.topField,
+    今後の方向性: d.goalLabel,
+    目指せる役職の目安: d.pathLabel,
+  };
+
+  fetch(SHEET_WEBAPP_URL, {
+    method: 'POST',
+    mode: 'no-cors', // Apps Script Web App はCORS応答がないため no-cors で送信
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+  }).catch(()=>{ /* 送信に失敗しても診断結果の表示自体は継続する */ });
+}
+
+function renderPath(expIdx, topField){
+  const stepsEl = document.getElementById('pathSteps');
+  stepsEl.innerHTML = '';
+  const noteEl = document.getElementById('pathNote');
+
+  const steps = [
+    { label:'職務分野別リーダー', cond:'いずれか1分野の研修修了・経験概ね3年以上', amount:'+5,000円/月〜' },
+    { label:'専門リーダー', cond:'4分野以上の研修修了・経験概ね7年以上', amount:'+5,000円/月〜' },
+    { label:'副主任保育士', cond:'マネジメント+3分野以上・リーダー経験・経験概ね7年以上', amount:'+40,000円/月〜' },
+  ];
+
+  let currentIdx = 0;
+  if(expIdx === 1) currentIdx = 0;
+  if(expIdx === 2) currentIdx = topField === 'マネジメント' ? 2 : 1;
+
+  steps.forEach((s,i)=>{
+    const div = document.createElement('div');
+    div.className = 'path-step' + (i===currentIdx ? ' current' : '');
+    div.innerHTML = `<div class="dot"></div><div>${s.label}<div style="font-size:11px;color:#7CA396;">${s.cond}</div></div><div class="amount">${s.amount}</div>`;
+    stepsEl.appendChild(div);
+  });
+
+  if(expIdx === 0){
+    noteEl.textContent = 'まずは「' + topField + '」の研修修了を目指すのがおすすめです。3年目以降、職務分野別リーダーの対象になります。';
+  } else if(expIdx === 1){
+    noteEl.textContent = '「' + topField + '」の研修を修了すれば、職務分野別リーダーとして処遇改善の対象になり得ます。';
+  } else {
+    noteEl.textContent = topField === 'マネジメント'
+      ? 'マネジメント研修+3分野以上の修了で、副主任保育士(月額最大4万円の処遇改善)を目指せる段階です。'
+      : '経験年数は十分なので、複数分野の研修を積み重ねることで専門リーダー・副主任へのステップアップが狙えます。';
+  }
+
+  return steps[currentIdx].label;
+}
+</script>
+</body>
+</html>
