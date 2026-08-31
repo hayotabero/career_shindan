@@ -73,7 +73,7 @@
   }
   .path-step .dot{ width:10px; height:10px; border-radius:50%; background:#C7E5D9; flex-shrink:0; }
   .path-step.current .dot{ background:var(--coral); }
-  .path-step .amount{ margin-left:auto; font-weight:800; color:var(--coral-deep); }
+  .path-step .amount{ margin-left:auto; font-weight:700; font-size:12.5px; color:#2F7A5F; }
 
   .sub-list{ margin-top:14px; }
   .sub-item{
@@ -205,7 +205,7 @@
     <div class="restart"><a id="restartLink">もう一度診断する</a></div>
 
     <div class="note">
-      ※ 厚生労働省「保育士等キャリアアップ研修ガイドライン」(8分野)に基づく一般的な目安です。処遇改善の金額や対象人数枠は施設によって異なり、必ず加算されることを保証するものではありません。詳しくは勤務先の制度をご確認ください。
+      ※ 厚生労働省・こども家庭庁「保育士等キャリアアップ研修ガイドライン」(8分野)に基づく一般的な目安です。2025年度(令和7年度)から処遇改善等加算の制度が「区分1〜3」に一本化され、加算額は園が裁量で配分する仕組みに変わりました。以前のような役職ごとの固定金額(例:副主任に月4万円等)の要件は撤廃されているため、実際にいくら処遇改善されるかは園の方針によって異なります。詳しくは勤務先にご確認ください。
     </div>
   </div>
 
@@ -376,9 +376,9 @@ function renderPath(expIdx, topField){
   const noteEl = document.getElementById('pathNote');
 
   const steps = [
-    { label:'職務分野別リーダー', cond:'いずれか1分野の研修修了・経験概ね3年以上', amount:'+5,000円/月〜' },
-    { label:'専門リーダー', cond:'4分野以上の研修修了・経験概ね7年以上', amount:'+5,000円/月〜' },
-    { label:'副主任保育士', cond:'マネジメント+3分野以上・リーダー経験・経験概ね7年以上', amount:'+40,000円/月〜' },
+    { label:'職務分野別リーダー', cond:'いずれか1分野の研修修了・経験概ね3年以上', amount:'加算対象になり得る' },
+    { label:'専門リーダー', cond:'4分野以上の研修修了・経験概ね7年以上', amount:'加算対象になり得る' },
+    { label:'副主任保育士', cond:'マネジメント+3分野以上・リーダー経験・経験概ね7年以上', amount:'加算対象になり得る' },
   ];
 
   let currentIdx = 0;
@@ -398,7 +398,7 @@ function renderPath(expIdx, topField){
     noteEl.textContent = '「' + topField + '」の研修を修了すれば、職務分野別リーダーとして処遇改善の対象になり得ます。';
   } else {
     noteEl.textContent = topField === 'マネジメント'
-      ? 'マネジメント研修+3分野以上の修了で、副主任保育士(月額最大4万円の処遇改善)を目指せる段階です。'
+      ? 'マネジメント研修+3分野以上の修了で、副主任保育士として処遇改善加算の対象になり得る段階です。'
       : '経験年数は十分なので、複数分野の研修を積み重ねることで専門リーダー・副主任へのステップアップが狙えます。';
   }
 
